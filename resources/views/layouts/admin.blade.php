@@ -67,6 +67,14 @@
         Kelola Kategori
     </a>
 
+    <a href="/admin/partners"
+   class="flex items-center gap-2 px-4 py-3 text-white hover:bg-indigo-700 rounded-lg">
+
+    <span>Kelola Partner</span>
+
+</a>
+
+
 </nav>
 
         <!-- Logout -->
