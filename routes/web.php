@@ -58,6 +58,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
 
     Route::get('/partners', [PartnerController::class, 'index']);
-    Route::post('/partners', [PartnerController::class, 'store']);
+Route::post('/partners', [PartnerController::class, 'store']);
+
+Route::get('/partners/{partner}/edit', [PartnerController::class, 'edit']);
+Route::put('/partners/{partner}', [PartnerController::class, 'update']); 
+Route::delete('/partners/{partner}', [PartnerController::class, 'destroy']);
+
 
 });
