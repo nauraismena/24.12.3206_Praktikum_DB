@@ -20,10 +20,8 @@
 
 <body class="bg-slate-50 text-slate-900 flex min-h-screen">
 
-    <!-- Sidebar -->
     <aside class="w-64 bg-indigo-900 text-indigo-100 flex flex-col p-6 space-y-8 sticky top-0 h-screen">
 
-        <!-- Logo -->
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-indigo-900 font-bold text-xl">
                 AH
@@ -31,53 +29,44 @@
             <span class="text-xl font-bold text-white tracking-tight">AmikomEventHub</span>
         </div>
 
-        <!-- Menu -->
-        <!-- Menu -->
-<nav class="flex-1 space-y-2">
+        <nav class="flex-1 space-y-2">
 
-    <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-4 px-2">
-        Main Menu
-    </p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-4 px-2">
+                Main Menu
+            </p>
 
-    <!-- Dashboard -->
-    <a href="{{ route('admin.dashboard') }}"
-       class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
-       {{ request()->is('admin') ? 'bg-indigo-800 text-white' : '' }}">
-        Dashboard
-    </a>
+            <a href="{{ route('admin.dashboard') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
+               {{ request()->is('admin') ? 'bg-indigo-800 text-white' : '' }}">
+                Dashboard
+            </a>
 
-    <!-- Event -->
-    <a href="{{ route('admin.events.index') }}"
-       class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
-       {{ request()->is('admin/events*') ? 'bg-indigo-800 text-white' : '' }}">
-        Kelola Event
-    </a>
+            <a href="{{ route('admin.events.index') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
+               {{ request()->is('admin/events*') ? 'bg-indigo-800 text-white' : '' }}">
+                Kelola Event
+            </a>
 
-    <!-- Transaksi -->
-    <a href="{{ route('admin.transactions') }}"
-       class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
-       {{ request()->is('admin/transactions*') ? 'bg-indigo-800 text-white' : '' }}">
-        Laporan Transaksi
-    </a>
+            <a href="{{ route('admin.transactions') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
+               {{ request()->is('admin/transactions*') ? 'bg-indigo-800 text-white' : '' }}">
+                Laporan Transaksi
+            </a>
 
-    <!-- Kategori -->
-    <a href="{{ route('admin.categories.index') }}"
-       class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
-       {{ request()->is('admin/categories*') ? 'bg-indigo-800 text-white' : '' }}">
-        Kelola Kategori
-    </a>
+            <a href="{{ route('admin.categories.index') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
+               {{ request()->is('admin/categories*') ? 'bg-indigo-800 text-white' : '' }}">
+                Kelola Kategori
+            </a>
 
-    <a href="/admin/partners"
-   class="flex items-center gap-2 px-4 py-3 text-white hover:bg-indigo-700 rounded-lg">
+            <a href="/admin/partners"
+               class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
+               {{ request()->is('admin/partners*') ? 'bg-indigo-800 text-white' : '' }}">
+                Kelola Partner
+            </a>
 
-    <span>Kelola Partner</span>
+        </nav>
 
-</a>
-
-
-</nav>
-
-        <!-- Logout -->
         <div class="pt-6 border-t border-indigo-800">
             <a href="/" class="px-4 py-3 text-indigo-300 hover:text-white font-medium">
                 Keluar
@@ -85,18 +74,17 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="flex-1 p-10 overflow-y-auto">
 
-        <!-- Header -->
+        @if(request()->is('admin'))
         <header class="flex justify-between items-center mb-10">
             <div>
-                <h1 class="text-3xl font-black">@yield('header', 'Dashboard')</h1>
+                <h1 class="text-3xl font-black">Dashboard</h1>
                 <p class="text-slate-500 font-medium">Selamat datang kembali, Admin!</p>
             </div>
         </header>
+        @endif
 
-        <!-- CONTENT -->
         @yield('content')
 
     </main>

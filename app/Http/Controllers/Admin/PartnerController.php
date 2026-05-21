@@ -1,18 +1,26 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+// 💡 SEKARANG SUDAH AMAN: Mengimpor Controller utama agar tidak eror 'Class not found'
+use App\Http\Controllers\Controller; 
 use Illuminate\Http\Request;
 use App\Models\Partner;
 
 class PartnerController extends Controller
 {
     // TAMPIL DATA
-    public function index()
-    {
-        $partners = Partner::all();
-        return view('admin.partners.index', compact('partners'));
-    }
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+    
+    // Fitur filter berdasarkan nama partner (Soal 3)
+    $partners = Partner::when($search, function ($query, $search) {
+        return $query->where('name', 'LIKE', "%{$search}%");
+    })->latest()->get();
+
+    return view('admin.partners.index', compact('partners'));
+}
 
     // TAMBAH DATA
     public function store(Request $request)

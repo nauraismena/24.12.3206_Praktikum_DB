@@ -2,17 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-// USER
+// USER CONTROLLERS
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 
-// ADMIN
+// ADMIN CONTROLLERS
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\PartnerController;
-
 
 
 // ================= USER =================
@@ -28,12 +27,11 @@ Route::get('/event/{event}', [EventController::class, 'show'])->name('events.sho
 Route::get('/checkout', [EventController::class, 'checkout']);
 Route::get('/ticket', [EventController::class, 'ticket']);
 
-
 // ================= ADMIN =================
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // dashboard
+    // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // ================= EVENT =================
@@ -44,12 +42,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/events/{event}', [AdminEventController::class, 'update'])->name('events.update');
     Route::delete('/events/{event}', [AdminEventController::class, 'destroy'])->name('events.destroy');
 
-    // ================= CATEGORY (FULL FIX) =================
+    // ================= CATEGORY =================
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-
-    // 🔥 INI YANG TADI KURANG
     Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
@@ -57,12 +53,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // ================= TRANSACTION =================
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
 
-    Route::get('/partners', [PartnerController::class, 'index']);
-Route::post('/partners', [PartnerController::class, 'store']);
-
-Route::get('/partners/{partner}/edit', [PartnerController::class, 'edit']);
-Route::put('/partners/{partner}', [PartnerController::class, 'update']); 
-Route::delete('/partners/{partner}', [PartnerController::class, 'destroy']);
-
+    // ================= PARTNER =================
+    // Diarahkan langsung ke namespace Admin agar tidak bentrok
+    Route::resource('partners', \App\Http\Controllers\Admin\PartnerController::class);
 
 });
