@@ -34,7 +34,6 @@ class EventController extends Controller
             'stock' => 'required|numeric',
         ]);
 
-        // ✅ FIX poster_path
         $data['poster_path'] = 'default.jpg';
 
         Event::create($data);
