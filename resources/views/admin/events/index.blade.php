@@ -23,6 +23,7 @@
             
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-200 text-gray-600 text-sm font-semibold">
+                    <th class="p-4 w-24">Poster</th>
                     <th class="p-4">Judul</th>
                     <th class="p-4">Kategori</th>
                     <th class="p-4">Tanggal</th>
@@ -36,6 +37,12 @@
             <tbody class="divide-y divide-gray-100 text-gray-700 text-sm">
                 @forelse($events as $event)
                 <tr class="hover:bg-gray-50/75 transition duration-150">
+
+                    <td class="p-4">
+                        <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
+                                    ? asset('storage/' . $event->poster_path)
+                                    : 'https://placehold.co/16x20' }}" class="w-16 h-20 rounded-xl object-cover shadow-sm">
+                    </td>
 
                     <td class="p-4 font-semibold text-gray-900">{{ $event->title }}</td>
 
@@ -98,7 +105,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="p-8 text-center text-gray-400 font-medium">
+                    <td colspan="8" class="p-8 text-center text-gray-400 font-medium">
                         Data event belum tersedia
                     </td>
                 </tr>

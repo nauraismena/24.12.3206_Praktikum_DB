@@ -7,12 +7,12 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 
 // ADMIN CONTROLLERS
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\PartnerController;
-
+use App\Http\Controllers\Admin\PartnerController;
 
 // ================= USER =================
 
@@ -23,38 +23,48 @@ Route::get('/katalog', fn() => view('katalog'));
 Route::get('/bantuan', fn() => view('bantuan'));
 
 Route::get('/event', [EventController::class, 'index']);
-Route::get('/event/{event}', [EventController::class, 'show'])->name('events.show');
+
+// PERUBAHAN DI SINI: Mengubah rute /event/{event} menjadi /events/{event} sesuai modul 9.4.6 Poin 1
+Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+
 Route::get('/checkout', [EventController::class, 'checkout']);
 Route::get('/ticket', [EventController::class, 'ticket']);
 
-// ================= ADMIN =================
 
-Route::prefix('admin')->name('admin.')->group(function () {
+// ================= LOGIN ADMIN =================
+
+Route::get('/admin/login', [AuthController::class, 'showLogin'])
+    ->name('admin.login');
+
+Route::post('/admin/login', [AuthController::class, 'login'])
+    ->name('admin.login.post');
+
+Route::post('/admin/logout', [AuthController::class, 'logout'])
+    ->name('admin.logout');
+
+
+// ================= ADMIN (PROTEKSI GANDA) =================
+
+// Di sini sudah diubah menjadi ['auth', 'admin'] agar Middleware IsAdmin aktif
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
-    // ================= EVENT =================
-    Route::get('/events', [AdminEventController::class, 'index'])->name('events.index');
-    Route::get('/events/create', [AdminEventController::class, 'create'])->name('events.create');
-    Route::post('/events', [AdminEventController::class, 'store'])->name('events.store');
-    Route::get('/events/{event}/edit', [AdminEventController::class, 'edit'])->name('events.edit');
-    Route::put('/events/{event}', [AdminEventController::class, 'update'])->name('events.update');
-    Route::delete('/events/{event}', [AdminEventController::class, 'destroy'])->name('events.destroy');
+    // Event
+    Route::resource('events', AdminEventController::class)
+        ->except('show');
 
-    // ================= CATEGORY =================
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    // Kategori
+    Route::resource('categories', CategoryController::class)
+        ->except('show');
 
-    // ================= TRANSACTION =================
-    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
+    // Partner
+    Route::resource('partners', PartnerController::class)
+        ->except('show');
 
-    // ================= PARTNER =================
-    // Diarahkan langsung ke namespace Admin agar tidak bentrok
-    Route::resource('partners', \App\Http\Controllers\Admin\PartnerController::class);
-
+    // Transaksi
+    Route::get('/transactions', [TransactionController::class, 'index'])
+        ->name('transactions.index');
 });

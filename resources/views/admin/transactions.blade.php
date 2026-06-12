@@ -63,7 +63,7 @@
                 Kelola Kategori
             </a>
 
-            <a href="{{ route('admin.transactions') }}"
+            <a href="{{ route('admin.transactions.index') }}"
                class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition hover:bg-indigo-800
                {{ request()->is('admin/transactions*') ? 'bg-indigo-800 text-white' : '' }}">
                 <svg class="w-5 h-5 text-indigo-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

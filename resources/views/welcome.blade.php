@@ -137,8 +137,10 @@
 
                 <div class="relative overflow-hidden aspect-[3/4]">
 
-                    {{-- DI SINI DIEDIT: Memanggil $event->poster_path sesuai nama kolom di database, dibungkus helper asset() luar dalam --}}
-                    <img src="{{ $event->poster_path ? asset($event->poster_path) : asset('assets/concert.png') }}"
+                    {{-- Menampilkan poster dinamis dari storage --}}
+                    <img src="{{ ($event->poster_path && \Storage::disk('public')->exists($event->poster_path))
+                                ? asset('storage/' . $event->poster_path)
+                                : 'https://placehold.co/600x800' }}"
                         alt="{{ $event->title }}"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
 
@@ -176,6 +178,7 @@
 
                         </span>
 
+                        {{-- Tautan Dinamis Detail Event --}}
                         <a href="{{ route('events.show', $event->id) }}"
                             class="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-xl font-bold hover:bg-indigo-600 hover:text-white transition flex items-center gap-2">
 

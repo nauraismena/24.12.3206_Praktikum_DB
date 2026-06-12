@@ -47,7 +47,7 @@
                 Kelola Event
             </a>
 
-            <a href="{{ route('admin.transactions') }}"
+            <a href="{{ route('admin.transactions.index') }}"
                class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold hover:bg-indigo-800 transition
                {{ request()->is('admin/transactions*') ? 'bg-indigo-800 text-white' : '' }}">
                 Laporan Transaksi
