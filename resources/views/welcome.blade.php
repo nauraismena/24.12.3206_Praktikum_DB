@@ -2,7 +2,6 @@
 
 @section('content')
 
-<!-- Hero Section -->
 <section class="max-w-7xl mx-auto px-6 py-20 flex flex-col md:flex-row items-center gap-12">
 
     <div class="flex-1 space-y-8">
@@ -91,10 +90,8 @@
 </section>
 
 
-<!-- EVENTS -->
 <section id="events" class="max-w-7xl mx-auto px-6 py-20">
 
-    <!-- Heading -->
     <div class="text-center mb-14">
 
         <h2 class="text-4xl font-extrabold mb-3">
@@ -108,10 +105,8 @@
     </div>
 
 
-    <!-- FILTER KATEGORI -->
     <div class="flex flex-wrap items-center justify-center gap-4 mb-14">
 
-        <!-- Semua -->
         <a href="/"
             class="px-6 py-3 rounded-2xl bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 hover:scale-105 active:scale-95 transition duration-200">
 
@@ -119,7 +114,6 @@
 
         </a>
 
-        <!-- Dynamic Category -->
         @foreach($categories as $cat)
 
             <a href="?category={{ $cat->slug }}"
@@ -134,7 +128,6 @@
     </div>
 
 
-    <!-- GRID EVENT -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
         @foreach($events as $event)
@@ -142,10 +135,12 @@
             <div
                 class="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden">
 
-                <!-- Image -->
                 <div class="relative overflow-hidden aspect-[3/4]">
 
-                    <img src="{{ $event->image ?? asset('assets/concert.png') }}"
+                    {{-- Menampilkan poster dinamis dari storage --}}
+                    <img src="{{ ($event->poster_path && \Storage::disk('public')->exists($event->poster_path))
+                                ? asset('storage/' . $event->poster_path)
+                                : 'https://placehold.co/600x800' }}"
                         alt="{{ $event->title }}"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
 
@@ -158,7 +153,6 @@
 
                 </div>
 
-                <!-- Content -->
                 <div class="p-6">
 
                     <h3
@@ -184,6 +178,7 @@
 
                         </span>
 
+                        {{-- Tautan Dinamis Detail Event --}}
                         <a href="{{ route('events.show', $event->id) }}"
                             class="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-xl font-bold hover:bg-indigo-600 hover:text-white transition flex items-center gap-2">
 
@@ -203,6 +198,40 @@
 
     </div>
 
+</section>
+
+
+<section class="bg-slate-50 border-t border-slate-100 py-16">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        
+        <h2 class="text-3xl font-extrabold text-slate-800 mb-2">
+            Official Partners
+        </h2>
+        <p class="text-slate-500 font-medium mb-10">
+            AmikomEventHub didukung oleh instansi dan korporasi terpercaya
+        </p>
+
+        <div class="flex flex-wrap justify-center items-center gap-6">
+            @forelse($partners as $partner)
+                <div class="bg-white py-5 px-4 rounded-2xl shadow-sm border border-slate-100 w-36 flex flex-col items-center justify-center group hover:shadow-md transition-all duration-200">
+                    
+                    <div class="h-10 flex items-center justify-center mb-2">
+                        <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform">
+                    </div>
+                    
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block text-center w-full leading-tight">
+                        {{ $partner->name }}
+                    </span>
+
+                </div>
+            @empty
+                <p class="text-sm text-slate-400 italic">
+                    Belum ada partner resmi terdaftar saat ini.
+                </p>
+            @endforelse
+        </div>
+
+    </div>
 </section>
 
 @endsection

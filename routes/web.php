@@ -2,16 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 
-// USER
+// USER CONTROLLERS
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 
-// ADMIN
+// ADMIN CONTROLLERS
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController;
-
+use App\Http\Controllers\Admin\PartnerController;
 
 // ================= USER =================
 
@@ -22,37 +23,48 @@ Route::get('/katalog', fn() => view('katalog'));
 Route::get('/bantuan', fn() => view('bantuan'));
 
 Route::get('/event', [EventController::class, 'index']);
-Route::get('/event/{event}', [EventController::class, 'show'])->name('events.show');
+
+// PERUBAHAN DI SINI: Mengubah rute /event/{event} menjadi /events/{event} sesuai modul 9.4.6 Poin 1
+Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+
 Route::get('/checkout', [EventController::class, 'checkout']);
 Route::get('/ticket', [EventController::class, 'ticket']);
 
 
-// ================= ADMIN =================
+// ================= LOGIN ADMIN =================
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::get('/admin/login', [AuthController::class, 'showLogin'])
+    ->name('admin.login');
 
-    // dashboard
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::post('/admin/login', [AuthController::class, 'login'])
+    ->name('admin.login.post');
 
-    // ================= EVENT =================
-    Route::get('/events', [AdminEventController::class, 'index'])->name('events.index');
-    Route::get('/events/create', [AdminEventController::class, 'create'])->name('events.create');
-    Route::post('/events', [AdminEventController::class, 'store'])->name('events.store');
-    Route::get('/events/{event}/edit', [AdminEventController::class, 'edit'])->name('events.edit');
-    Route::put('/events/{event}', [AdminEventController::class, 'update'])->name('events.update');
-    Route::delete('/events/{event}', [AdminEventController::class, 'destroy'])->name('events.destroy');
+Route::post('/admin/logout', [AuthController::class, 'logout'])
+    ->name('admin.logout');
 
-    // ================= CATEGORY (FULL FIX) =================
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
 
-    // 🔥 INI YANG TADI KURANG
-    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+// ================= ADMIN (PROTEKSI GANDA) =================
 
-    // ================= TRANSACTION =================
-    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
+// Di sini sudah diubah menjadi ['auth', 'admin'] agar Middleware IsAdmin aktif
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
+    // Dashboard
+    Route::get('/', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    // Event
+    Route::resource('events', AdminEventController::class)
+        ->except('show');
+
+    // Kategori
+    Route::resource('categories', CategoryController::class)
+        ->except('show');
+
+    // Partner
+    Route::resource('partners', PartnerController::class)
+        ->except('show');
+
+    // Transaksi
+    Route::get('/transactions', [TransactionController::class, 'index'])
+        ->name('transactions.index');
 });

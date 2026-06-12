@@ -10,8 +10,18 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+        
+        // PASTIKAN DI SINI MENGGUNAKAN 'guests' (Ada huruf S di belakangnya)
+        $middleware->redirectTo(
+            guests: '/admin/login'
+        );
+
+        // Alias untuk proteksi IsAdmin
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\IsAdmin::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
