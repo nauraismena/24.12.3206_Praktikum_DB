@@ -17,6 +17,11 @@ class Event extends Model
         'poster_path' 
     ];
 
+    // Tambahkan bagian ini untuk mengonversi kolom date menjadi objek datetime
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);

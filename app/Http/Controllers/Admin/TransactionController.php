@@ -9,8 +9,9 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::all();
+        // Mengambil transaksi terbaru dengan pembatasan 20 baris/ halaman
+        $transactions = Transaction::with('event')->latest()->paginate(20);
 
-        return view('admin.transactions', compact('transactions'));
+        return view('admin.transactions.index', compact('transactions'));
     }
 }

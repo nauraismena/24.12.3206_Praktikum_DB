@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 // USER CONTROLLERS
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\CheckoutController;
 
 // ADMIN CONTROLLERS
 use App\Http\Controllers\Admin\AuthController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PartnerController;
+
 
 // ================= USER =================
 
@@ -24,10 +26,18 @@ Route::get('/bantuan', fn() => view('bantuan'));
 
 Route::get('/event', [EventController::class, 'index']);
 
-// PERUBAHAN DI SINI: Mengubah rute /event/{event} menjadi /events/{event} sesuai modul 9.4.6 Poin 1
-Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+// Detail event
+Route::get('/events/{event}', [EventController::class, 'show'])
+    ->name('events.show');
 
-Route::get('/checkout', [EventController::class, 'checkout']);
+// Checkout (USER)
+Route::get('/checkout/{event}', [CheckoutController::class, 'create'])
+    ->name('checkout.create');
+
+Route::post('/checkout/{event}', [CheckoutController::class, 'store'])
+    ->name('checkout.store');
+
+// Ticket
 Route::get('/ticket', [EventController::class, 'ticket']);
 
 
@@ -43,10 +53,12 @@ Route::post('/admin/logout', [AuthController::class, 'logout'])
     ->name('admin.logout');
 
 
-// ================= ADMIN (PROTEKSI GANDA) =================
+// ================= ADMIN =================
 
-// Di sini sudah diubah menjadi ['auth', 'admin'] agar Middleware IsAdmin aktif
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])
@@ -65,6 +77,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ->except('show');
 
     // Transaksi
-    Route::get('/transactions', [TransactionController::class, 'index'])
-        ->name('transactions.index');
+    Route::get('transactions', [\App\Http\Controllers\Admin\TransactionController::class, 'index'])
+    ->name('transactions.index');
+    
 });
