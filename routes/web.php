@@ -71,4 +71,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Transaksi
     Route::get('/transactions', [TransactionController::class, 'index'])
         ->name('transactions.index');
+
+      Route::post('/midtrans/callback', 
+      [\App\Http\Controllers\MidtransWebhookController::class, 'handle']);  
 });
