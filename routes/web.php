@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\PartnerController;
 
 // ================= USER =================
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/profil', fn() => view('profil'));
 Route::get('/katalog', fn() => view('katalog'));
@@ -74,4 +74,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
       Route::post('/midtrans/callback', 
       [\App\Http\Controllers\MidtransWebhookController::class, 'handle']);  
+
+
 });

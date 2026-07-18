@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\Category; // Memanggil model Category agar tidak error
+use App\Models\Category;
 
 class EventController extends Controller
 {
@@ -15,6 +15,9 @@ class EventController extends Controller
 
     public function show(Event $event) 
     {
+        // Memuat relasi kategori untuk event ini agar $event->category->name di HTML berfungsi
+        $event->load('category');
+
         // Mengambil daftar kategori untuk keperluan menu navigasi/footer
         $categories = Category::all();
 
